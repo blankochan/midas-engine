@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3 uid="uid://gjlgoy4dwfqu"]
+
+[ext_resource type="Script" uid="uid://dykcyrn0ac66w" path="res://scripts/PlanetManager.cs" id="1_o5qli"]
+[ext_resource type="PackedScene" uid="uid://c0tw0qpwx03t1" path="res://scenes/sector.tscn" id="2_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://3bn4uy83bmyj" path="res://scenes/tile.tscn" id="3_jyhfs"]
+[ext_resource type="PackedScene" uid="uid://cls3v03d1hw7a" path="res://scenes/pointTest.tscn" id="3_sugp2"]
+[ext_resource type="Script" uid="uid://bnacqyhtk4eqm" path="res://scripts/PlayerManager.cs" id="5_tbgi4"]
+
+[node name="Main" type="Node"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.9993284, -0.0116878515, 0.034729745, 0, 0.9477684, 0.31895933, -0.036643706, -0.3187451, 0.9471319, 0, 0, 0)
+light_color = Color(1, 0.90588236, 0.85490197, 1)
+shadow_enabled = true
+
+[node name="Managers" type="Node" parent="."]
+
+[node name="PlanetManager" type="Node" parent="Managers"]
+script = ExtResource("1_o5qli")
+planetPath = NodePath("../../Planet")
+sectorPrototype = ExtResource("2_0wfyh")
+tileProtoype = ExtResource("3_jyhfs")
+pointTest = ExtResource("3_sugp2")
+
+[node name="PlayerManager" type="Node" parent="Managers" node_paths=PackedStringArray("camera")]
+script = ExtResource("5_tbgi4")
+camera = NodePath("../../Camera")
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 3, 0)
+fov = 34.631897
+
+[node name="RayCast" type="RayCast3D" parent="Camera"]
+
+[node name="Planet" type="Node" parent="."]
+
+[node name="TheGrid" type="Node" parent="Planet"]
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.82522196, 0.5648086, 0, -0.5648086, -0.82522196, 0, 3.7416716, -6.281315)
+light_color = Color(0, 1, 1, 1)
+spot_range = 19.354795

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cls3v03d1hw7a"]
+
+[ext_resource type="SphereMesh" uid="uid://dqfcmeaco81wa" path="res://new_sphere_mesh.tres" id="1_rndiy"]
+
+[node name="PointTest" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_rndiy")
