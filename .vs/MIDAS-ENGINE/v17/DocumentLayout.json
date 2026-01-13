@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\mrren\\Documents\\MidasEngineROOT\\midas-engine\\midas-engine\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\mrren\\Documents\\MidasEngineROOT\\midas-engine\\midas-engine\\scripts\\PlayerManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:scripts\\PlayerManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9F83EC79-DBA3-4DB7-9C07-BED9B823530D}|midas-engine.csproj|c:\\users\\mrren\\documents\\midasengineroot\\midas-engine\\midas-engine\\scripts\\tile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9F83EC79-DBA3-4DB7-9C07-BED9B823530D}|midas-engine.csproj|solutionrelative:scripts\\tile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9F83EC79-DBA3-4DB7-9C07-BED9B823530D}|midas-engine.csproj|c:\\users\\mrren\\documents\\midasengineroot\\midas-engine\\midas-engine\\scripts\\playermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F83EC79-DBA3-4DB7-9C07-BED9B823530D}|midas-engine.csproj|solutionrelative:scripts\\playermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9F83EC79-DBA3-4DB7-9C07-BED9B823530D}|midas-engine.csproj|c:\\users\\mrren\\documents\\midasengineroot\\midas-engine\\midas-engine\\scripts\\planetmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9F83EC79-DBA3-4DB7-9C07-BED9B823530D}|midas-engine.csproj|solutionrelative:scripts\\planetmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F83EC79-DBA3-4DB7-9C07-BED9B823530D}|midas-engine.csproj|c:\\users\\mrren\\documents\\midasengineroot\\midas-engine\\midas-engine\\scripts\\tile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F83EC79-DBA3-4DB7-9C07-BED9B823530D}|midas-engine.csproj|solutionrelative:scripts\\tile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9F83EC79-DBA3-4DB7-9C07-BED9B823530D}|midas-engine.csproj|c:\\users\\mrren\\documents\\midasengineroot\\midas-engine\\midas-engine\\scripts\\sector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -43,13 +43,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "PlanetManager.cs",
               "DocumentMoniker": "C:\\Users\\mrren\\Documents\\MidasEngineROOT\\midas-engine\\midas-engine\\scripts\\PlanetManager.cs",
               "RelativeDocumentMoniker": "scripts\\PlanetManager.cs",
               "ToolTip": "C:\\Users\\mrren\\Documents\\MidasEngineROOT\\midas-engine\\midas-engine\\scripts\\PlanetManager.cs",
               "RelativeToolTip": "scripts\\PlanetManager.cs",
-              "ViewState": "AgIAAGgBAAAAAAAAAAAAAHcBAAA/AAAAAAAAAA==",
+              "ViewState": "AgIAAB0BAAAAAAAAAAAAAC0BAABzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-12T00:30:54.771Z",
               "EditorCaption": ""
@@ -64,18 +64,17 @@
               "RelativeToolTip": "scripts\\Sector.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-11T22:16:01.437Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-11T22:16:01.437Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Tile.cs",
               "DocumentMoniker": "C:\\Users\\mrren\\Documents\\MidasEngineROOT\\midas-engine\\midas-engine\\scripts\\Tile.cs",
               "RelativeDocumentMoniker": "scripts\\Tile.cs",
               "ToolTip": "C:\\Users\\mrren\\Documents\\MidasEngineROOT\\midas-engine\\midas-engine\\scripts\\Tile.cs",
               "RelativeToolTip": "scripts\\Tile.cs",
-              "ViewState": "AgIAAG0AAAAAAAAAAAAcwHIAAAA2AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-11T00:55:18.7Z",
               "EditorCaption": ""

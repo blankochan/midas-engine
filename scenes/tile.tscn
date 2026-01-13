@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://3bn4uy83bmyj"]
+[gd_scene load_steps=5 format=3 uid="uid://3bn4uy83bmyj"]
 
 [ext_resource type="Script" uid="uid://dh6hdtakb52rh" path="res://scripts/Tile.cs" id="1_3dk36"]
+[ext_resource type="Shader" uid="uid://deliousa4dqm6" path="res://shader/testinggaming.gdshader" id="2_ywnoi"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3dk36"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jy7pm"]
+render_priority = 0
+shader = ExtResource("2_ywnoi")
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_uiyn6"]
 
@@ -10,7 +13,7 @@
 script = ExtResource("1_3dk36")
 
 [node name="Visuals" type="MeshInstance3D" parent="."]
-material_override = SubResource("StandardMaterial3D_3dk36")
+material_override = SubResource("ShaderMaterial_jy7pm")
 mesh = SubResource("ArrayMesh_uiyn6")
 
 [node name="Physics" type="StaticBody3D" parent="."]

@@ -299,7 +299,7 @@ public partial class PlanetManager : Node
             {
                 for (uint col = 0; col < row + 1; col++)
                 {
-                    allPoints[face, row, col] = allPoints[face, row, col].Normalized();
+                    allPoints[face, row, col] = allPoints[face, row, col].Normalized() * PlanetInfo.tilesPerSector;
 
                     /*Node3D node = (Node3D)pointTest.Instantiate();
                     AddChild(node);
