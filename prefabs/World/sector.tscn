@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c0tw0qpwx03t1"]
 
 [ext_resource type="Script" uid="uid://cjsmnct85oqll" path="res://scripts/Sector.cs" id="1_l8itw"]
-[ext_resource type="PackedScene" uid="uid://3bn4uy83bmyj" path="res://scenes/tile.tscn" id="2_c2nvg"]
+[ext_resource type="PackedScene" uid="uid://3bn4uy83bmyj" path="res://prefabs/World/tile.tscn" id="2_c2nvg"]
 
 [node name="Sector" type="Node"]
 script = ExtResource("1_l8itw")

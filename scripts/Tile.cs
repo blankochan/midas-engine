@@ -74,7 +74,16 @@ public struct TileInfo
     public byte GetMove(byte move)
     {
         uint mask = (uint)(3 << 2 * move);
-        return (byte)((asperaCoords & mask) / (byte)Math.Pow(4, move));
+        try
+        {
+            return (byte)((asperaCoords & mask) / (uint)Math.Ceiling(Math.Pow(4, move)));
+        }
+        catch
+        {
+            GD.Print("THINGS ARE FUCKED UP: ", move);
+            return 0;
+        }
+        
     }
 }
 

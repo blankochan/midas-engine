@@ -7,31 +7,9 @@ public struct PlanetInfo
 
     public static uint tilesPerSector;
     public static uint pointsPerEdge;
-}
-
-public partial class PlanetManager : Node
-{
-
-    [Export]
-    public NodePath planetPath;
-    public Node planet;
-
-    public Node theGrid;
-    public Sector[] sectors = new Sector[20];
-
-    [Export]
-    public PackedScene sectorPrototype;
-    [Export]
-    public PackedScene tileProtoype;
-
-    [Export]
-    public PackedScene pointTest;
-
-    [Export(PropertyHint.Range, "0,8,")]
-    public byte depth;
 
     // Edges (Going in the direction of I)
-    static byte[,] edgesDefinition =
+    public static byte[,] edgesDefinition =
     {
         // Upper ring
         {00, 01},   // 00
@@ -68,7 +46,7 @@ public partial class PlanetManager : Node
         {10, 06}    // 29
     };
 
-    static byte[,] facesDefinition =
+    public static byte[,] facesDefinition =
     {
             //  {Edge1, Edge2, Edge3, UpsideDown (If Edges 1 and 2 go away from I), Humor (If J corner is first on the Third Edge)}
         // Upper ring
@@ -96,6 +74,27 @@ public partial class PlanetManager : Node
         {28, 20, 29, 00, 01}    // 19
     }; // This is defined by the J and K edges
 
+}
+
+public partial class PlanetManager : Node
+{
+    [Export]
+    public NodePath planetPath;
+    public Node planet;
+
+    public Node theGrid;
+    public Sector[] sectors = new Sector[20];
+
+    [Export]
+    public PackedScene sectorPrototype;
+    [Export]
+    public PackedScene tileProtoype;
+
+    [Export]
+    public PackedScene pointTest;
+
+    [Export(PropertyHint.Range, "0,8,")]
+    public byte depth;
 
     public override void _Ready()
     {
@@ -120,27 +119,22 @@ public partial class PlanetManager : Node
         }
 
         // Visuals
+
+        // There are three steps
+
+
         Vector3[,,] allPoints = new Vector3[20, PlanetInfo.pointsPerEdge, PlanetInfo.pointsPerEdge]; // [FACE, ROW, COL]
 
-        Vector3[] basePoints = new Vector3[12];
-        float quirk0 = (float)(1 / Math.Sqrt(5));
-        float quirk1 = (float)((5 - Math.Sqrt(5)) / 10);
-        float quirk2 = (float)((-5 - Math.Sqrt(5)) / 10);
-        float quirk3 = (float)(Math.Sqrt( (5 - Math.Sqrt(5)) / 10));
-        float quirk4 = (float)(Math.Sqrt( (5 + Math.Sqrt(5)) / 10));
-
-        /*
-        
-        So far, each face looks like this:
-
-
-
-        */
-
-
-
+        // Step 1, the base points
         // First 12 are the base points of an icosahedron (In brackets for collapsability
+        Vector3[] basePoints = new Vector3[12];
         {
+            float quirk0 = (float)(1 / Math.Sqrt(5));
+            float quirk1 = (float)((5 - Math.Sqrt(5)) / 10);
+            float quirk2 = (float)((-5 - Math.Sqrt(5)) / 10);
+            float quirk3 = (float)(Math.Sqrt((5 - Math.Sqrt(5)) / 10));
+            float quirk4 = (float)(Math.Sqrt((5 + Math.Sqrt(5)) / 10));
+
             basePoints[0] = new Vector3(0, 1, 0);
             basePoints[1] = new Vector3(-quirk3, quirk0, -quirk2);
             basePoints[2] = new Vector3(quirk3, quirk0, -quirk2);
@@ -155,140 +149,155 @@ public partial class PlanetManager : Node
             basePoints[10] = new Vector3(-quirk4, -quirk0, quirk1);
             basePoints[11] = new Vector3(0, -1, 0);
         }
+        
+        // Step 2, the edge points, ignored if depth < 1
+        Vector3[,] edgeUniquePoints = new Vector3[0,0];
 
-        for (int i = 0; i < 12; i++)
+        if (depth > 0)
         {
-            /*Node3D node = (Node3D)pointTest.Instantiate();
-            AddChild(node);
-            node.GlobalPosition = basePoints[i];*/
-        }
-
-        Vector3[,] edgeUniquePoints = new Vector3[30, PlanetInfo.pointsPerEdge - 2]; // Is 2 smaller then allPoints because it does not include basePoints
-
-        for (int edge = 0; edge < 30; edge++)
-        {
-            Vector3 origin = basePoints[edgesDefinition[edge, 0]];
-            Vector3 destination = basePoints[edgesDefinition[edge, 1]];
-            for (int i = 0; i < PlanetInfo.pointsPerEdge - 2; i++)
+            edgeUniquePoints = new Vector3[30, PlanetInfo.pointsPerEdge - 2]; // Is 2 smaller then allPoints because it does not include basePoints
+            for (int edge = 0; edge < 30; edge++)
             {
-                edgeUniquePoints[edge, i] = origin.Lerp(destination, (float)(i + 1) / (float)(PlanetInfo.pointsPerEdge - 1)); // Is 1 smaller because 5 points have 4 gaps between them
+                Vector3 origin = basePoints[PlanetInfo.edgesDefinition[edge, 0]];
+                Vector3 destination = basePoints[PlanetInfo.edgesDefinition[edge, 1]];
+                for (int i = 0; i < PlanetInfo.pointsPerEdge - 2; i++)
+                {
+                    edgeUniquePoints[edge, i] = origin.Lerp(destination, (float)(i + 1) / (float)(PlanetInfo.pointsPerEdge - 1)); // Is 1 smaller because 5 points have 4 gaps between them
+                }
             }
         }
 
-        // Getting all the points in this format: [FACE, ROW, COL]
-        // The ROW and COL is determined off the J and K edges
-
+        // Step 3, the face Points, ignored if depth < 2
+        Vector3[,,] faceUniquePoints = new Vector3[0, 0, 0];
         if (depth > 1)
         {
-
-            // [Face, Row, Col]
-            Vector3[,,] facePoints = new Vector3[20, PlanetInfo.pointsPerEdge - 3, PlanetInfo.pointsPerEdge - 3]; // Is 3 smaller then allPoints because it does not include basePoints or edgePoints
-
+            faceUniquePoints = new Vector3[20, PlanetInfo.pointsPerEdge - 3, PlanetInfo.pointsPerEdge - 3]; // Is 3 smaller then allPoints because it does not include basePoints or edgePoints
             for (int face = 0; face < 20; face++)
             {
-                bool upsideDown = facesDefinition[face, 3] == 1;
+                bool upsideDown = PlanetInfo.facesDefinition[face, 3] == 1;
                 for (int row = 0; row < PlanetInfo.pointsPerEdge - 3; row++) // Is 3 smaller then allPoints because it does not include basePoints or edgePoints
                 {
                     // row is incremented because the grid of the face points starts one index later then the edges
                     // the first edges 
-                    Vector3 origin = edgeUniquePoints[facesDefinition[face, 0], row + 1];
-                    Vector3 destination = edgeUniquePoints[facesDefinition[face, 1], row + 1]; // + 1 because we skip the first two rows of the face, with not face points.
+                    Vector3 origin = edgeUniquePoints[PlanetInfo.facesDefinition[face, 0], row + 1];
+                    Vector3 destination = edgeUniquePoints[PlanetInfo.facesDefinition[face, 1], row + 1]; // + 1 because we skip the first two rows of the face, with not face points.
                     if (upsideDown)
                     {
-                        origin = edgeUniquePoints[facesDefinition[face, 0], PlanetInfo.pointsPerEdge - row - 4];       
-                        destination = edgeUniquePoints[facesDefinition[face, 1], PlanetInfo.pointsPerEdge - row - 4]; // -1 because we get the last point of the edge, -row because we are on the opposite side
+                        origin = edgeUniquePoints[PlanetInfo.facesDefinition[face, 0], PlanetInfo.pointsPerEdge - row - 4];
+                        destination = edgeUniquePoints[PlanetInfo.facesDefinition[face, 1], PlanetInfo.pointsPerEdge - row - 4]; // -1 because we get the last point of the edge, -row because we are on the opposite side
                     }
                     for (int col = 0; col < row + 1; col++)
                     {
-                        facePoints[face, row, col] = origin.Lerp(destination, (float)(col + 1) / (float)(row + 2));
+                        faceUniquePoints[face, row, col] = origin.Lerp(destination, (float)(col + 1) / (float)(row + 2));
                     }
                 }
             }
+        }
 
-            // All points generation
-            // TODO: FIX
+        // All points assignement
+        if (depth > 1)
+        {
             for (byte face = 0; face < 20; face++)
             {
                 
-                bool upsideDown = facesDefinition[face, 3] == 1;
-                bool flipped = facesDefinition[face, 4] == 1;
+                bool upsideDown = PlanetInfo.facesDefinition[face, 3] == 1;
+                bool flipped = PlanetInfo.facesDefinition[face, 4] == 1;
 
                 // First row, just the I corner.
-                if (upsideDown) allPoints[face, 0, 0] = basePoints[edgesDefinition[facesDefinition[face, 0], 1]];
-                else allPoints[face, 0, 0] = basePoints[edgesDefinition[facesDefinition[face, 0], 0]];
+                if (upsideDown) allPoints[face, 0, 0] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 0], 1]];
+                else allPoints[face, 0, 0] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 0], 0]];
 
                 // Middle rows
                 for (int row = 1; row < PlanetInfo.pointsPerEdge - 1; row++) // -1 to cull out the final row
                 {
 
                     // Left edge
-                    if (upsideDown) allPoints[face, row, 0] = edgeUniquePoints[facesDefinition[face, 0], PlanetInfo.pointsPerEdge - row - 2];
-                    else allPoints[face, row, 0] = edgeUniquePoints[facesDefinition[face, 0], row - 1];
+                    if (upsideDown) allPoints[face, row, 0] = edgeUniquePoints[PlanetInfo.facesDefinition[face, 0], PlanetInfo.pointsPerEdge - row - 2];
+                    else allPoints[face, row, 0] = edgeUniquePoints[PlanetInfo.facesDefinition[face, 0], row - 1];
 
                     // Face Points, only starts when row = 2
                     for (int col = 1; col < row; col++) // -1 to cull out the right edge
                     {
-                        allPoints[face, row, col] = facePoints[face, row - 2, col - 1]; // We cut out the first two rows, and the first column
+                        allPoints[face, row, col] = faceUniquePoints[face, row - 2, col - 1]; // We cut out the first two rows, and the first column
                     }
                     
                     // Right edge
-                    if (upsideDown) allPoints[face, row, row] = edgeUniquePoints[facesDefinition[face, 1], PlanetInfo.pointsPerEdge - row - 2];
-                    else allPoints[face, row, row] = edgeUniquePoints[facesDefinition[face, 1], row - 1];
+                    if (upsideDown) allPoints[face, row, row] = edgeUniquePoints[PlanetInfo.facesDefinition[face, 1], PlanetInfo.pointsPerEdge - row - 2];
+                    else allPoints[face, row, row] = edgeUniquePoints[PlanetInfo.facesDefinition[face, 1], row - 1];
                 }
 
                 // Last row, the two other base points and an edge.
                 // Grab the Base Point mentioned in the definiton of the third edge of this face, with Humor determining wether we take the first base point or the second (we want the j corner)
 
-                if (flipped) allPoints[face, PlanetInfo.pointsPerEdge - 1, 0] = basePoints[edgesDefinition[facesDefinition[face, 2], 0]];
-                else allPoints[face, PlanetInfo.pointsPerEdge - 1, 0] = basePoints[edgesDefinition[facesDefinition[face, 2], 0]];
+                if (flipped) allPoints[face, PlanetInfo.pointsPerEdge - 1, 0] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 2], 0]];
+                else allPoints[face, PlanetInfo.pointsPerEdge - 1, 0] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 2], 0]];
 
                 for (uint col = 1; col < PlanetInfo.pointsPerEdge - 1; col++)
                 {
                     uint index = col - 1;
                     //if (flipped) index = PlanetInfo.pointsPerEdge - col - 2;
 
-                    allPoints[face, PlanetInfo.pointsPerEdge - 1, col] = edgeUniquePoints[facesDefinition[face, 2], index];
+                    allPoints[face, PlanetInfo.pointsPerEdge - 1, col] = edgeUniquePoints[PlanetInfo.facesDefinition[face, 2], index];
                 }
 
-                if (flipped) allPoints[face, PlanetInfo.pointsPerEdge - 1, PlanetInfo.pointsPerEdge - 1] = basePoints[edgesDefinition[facesDefinition[face, 2], 1]];
-                else allPoints[face, PlanetInfo.pointsPerEdge - 1, PlanetInfo.pointsPerEdge - 1] = basePoints[edgesDefinition[facesDefinition[face, 2], 1]];
+                if (flipped) allPoints[face, PlanetInfo.pointsPerEdge - 1, PlanetInfo.pointsPerEdge - 1] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 2], 1]];
+                else allPoints[face, PlanetInfo.pointsPerEdge - 1, PlanetInfo.pointsPerEdge - 1] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 2], 1]];
 
             }
 
         }
         else if (depth == 1)
         {
+            for (int face = 0; face < 20; face++)
+            {
+                bool upsideDown = PlanetInfo.facesDefinition[face, 3] == 1;
+                bool flipped = PlanetInfo.facesDefinition[face, 4] == 1;
 
+                // I Corner
+                if (upsideDown) allPoints[face, 0, 0] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 0], 1]];
+                else allPoints[face, 0, 0] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 0], 0]];
+
+
+                // Middle row
+
+                // J and K Corners
+                if (flipped)
+                {
+                    // Middle row
+                    allPoints[face, 1, 1] = edgeUniquePoints[PlanetInfo.facesDefinition[face, 1], 0];
+                    allPoints[face, 1, 0] = edgeUniquePoints[PlanetInfo.facesDefinition[face, 0], 0];
+
+                    allPoints[face, 2, 2] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 2], 1]]; // J
+                    allPoints[face, 2, 0] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 2], 0]]; // K
+                    
+                }
+                else
+                {
+                    // Middle row
+                    allPoints[face, 1, 0] = edgeUniquePoints[PlanetInfo.facesDefinition[face, 0], 0];
+                    allPoints[face, 1, 1] = edgeUniquePoints[PlanetInfo.facesDefinition[face, 1], 0];
+
+                    allPoints[face, 2, 0] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 2], 0]]; // J
+                    allPoints[face, 2, 2] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 2], 1]]; // K
+                }
+                allPoints[face, 2, 1] = edgeUniquePoints[PlanetInfo.facesDefinition[face, 2], 0];
+
+            }
         }
         else // depth == 0
         {
             for (int face = 0; face < 20; face++) // Faces 00 to 04, inclusive
             {
-                bool upsideDown = facesDefinition[face, 3] == 1;
-                bool flipped = facesDefinition[face, 4] == 1;
+                bool upsideDown = PlanetInfo.facesDefinition[face, 3] == 1;
+                bool flipped = PlanetInfo.facesDefinition[face, 4] == 1;
 
                 // I Corner
-                if (upsideDown) allPoints[face, 0, 0] = basePoints[edgesDefinition[PlanetManager.facesDefinition[face, 0], 1]];
-                else allPoints[face, 0, 0] = basePoints[edgesDefinition[PlanetManager.facesDefinition[face, 0], 0]];
+                if (upsideDown) allPoints[face, 0, 0] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 0], 1]];
+                else allPoints[face, 0, 0] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 0], 0]];
 
-                // J Corner
-                if (flipped)
-                {
-                    allPoints[face, 1, 0] = basePoints[edgesDefinition[PlanetManager.facesDefinition[face, 2], 1]]; // J
-                    allPoints[face, 1, 1] = basePoints[edgesDefinition[PlanetManager.facesDefinition[face, 2], 0]]; // K
-
-                    if (face == 6)
-                    {
-                        GD.Print("K Point of Sector6: ", basePoints[edgesDefinition[PlanetManager.facesDefinition[face, 2], 1]]);
-                        GD.Print("JK Edge of Sector6: ", edgesDefinition[PlanetManager.facesDefinition[face, 2], 1]);
-                        GD.Print("   Face of Sector6: ", PlanetManager.facesDefinition[face, 2]);
-                    }
-                }
-                else
-                {
-                    allPoints[face, 1, 0] = basePoints[edgesDefinition[PlanetManager.facesDefinition[face, 2], 0]]; // J
-                    allPoints[face, 1, 1] = basePoints[edgesDefinition[PlanetManager.facesDefinition[face, 2], 1]]; // K
-                }
+                // J and K Corners
+                allPoints[face, 1, 0] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 2], 0]]; // J
+                allPoints[face, 1, 1] = basePoints[PlanetInfo.edgesDefinition[PlanetInfo.facesDefinition[face, 2], 1]]; // K
             }
         }
         
@@ -299,14 +308,13 @@ public partial class PlanetManager : Node
             {
                 for (uint col = 0; col < row + 1; col++)
                 {
-                    allPoints[face, row, col] = allPoints[face, row, col].Normalized() * PlanetInfo.tilesPerSector;
-
-                    /*Node3D node = (Node3D)pointTest.Instantiate();
-                    AddChild(node);
-                    node.GlobalPosition = allPoints[face, row, col];*/
+                    allPoints[face, row, col] = allPoints[face, row, col].Normalized() * (float)Math.Pow(2, depth);
                 }
             }
         }
+
+        // Testing
+        float surfaceArea = 0;
 
         // Triangulation
         for (byte face = 0; face < 20; face++)
@@ -367,7 +375,7 @@ public partial class PlanetManager : Node
                     JCorner = newJCorner;
                     KCorner = newKCorner;
                 }
-                if (PlanetManager.facesDefinition[face, 3] == 0 && PlanetManager.facesDefinition[face, 4] == 0)
+                if (PlanetInfo.facesDefinition[face, 3] == 0 && PlanetInfo.facesDefinition[face, 4] == 0)
                 {
                     Tile current = (Tile)theGrid.GetChild(face).GetChild((int)tri.asperaCoords);
                     current.InitializeVisuals(
@@ -375,7 +383,7 @@ public partial class PlanetManager : Node
                         allPoints[face, KCorner.X, KCorner.Y],
                         allPoints[face, JCorner.X, JCorner.Y]);
                 }
-                else if (PlanetManager.facesDefinition[face, 3] == 1 && PlanetManager.facesDefinition[face, 4] == 0)
+                else if (PlanetInfo.facesDefinition[face, 3] == 1 && PlanetInfo.facesDefinition[face, 4] == 0)
                 {
                     Tile current = (Tile)theGrid.GetChild(face).GetChild((int)tri.asperaCoords);
                     current.InitializeVisuals(
@@ -392,10 +400,20 @@ public partial class PlanetManager : Node
                         allPoints[face, KCorner.X, KCorner.Y]);
                 }
 
+                // Get average triangle size
+                
             }
+            Vector3 IJ = allPoints[face, 1, 0] - allPoints[face, 0, 0];
+            Vector3 IK = allPoints[face, 0, 1] - allPoints[face, 0, 0];
+            surfaceArea += IJ.Cross(IK).Length() / 2;
         }
+
+        GD.Print("The average triangle size was: ", surfaceArea / 20);
     }
 
+    private void GetBasePoints(Vector3 output)
+    {
 
+    }
 
 }

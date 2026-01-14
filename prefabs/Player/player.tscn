@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://bkgahbi35syob"]
+
+[ext_resource type="PackedScene" uid="uid://bm5npnb1lh33o" path="res://assets/models/programmer_art_drone.fbx" id="1_8e1wo"]
+[ext_resource type="Script" uid="uid://bnacqyhtk4eqm" path="res://prefabs/Player/PlayerController.cs" id="1_g8wir"]
+
+[node name="Player" type="Node3D" node_paths=PackedStringArray("camera", "shitpoint")]
+script = ExtResource("1_g8wir")
+camera = NodePath("Anchor/Visuals/Camera")
+shitpoint = NodePath("Anchor/Ellies (who doesnt deserve tto have her name written right right now) shitty fucking point")
+
+[node name="Anchor" type="Node3D" parent="."]
+
+[node name="Ellies (who doesnt deserve tto have her name written right right now) shitty fucking point" type="Node3D" parent="Anchor"]
+
+[node name="Visuals" parent="Anchor" instance=ExtResource("1_8e1wo")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 0, 0, 0)
+
+[node name="Camera" type="Camera3D" parent="Anchor/Visuals"]
+transform = Transform3D(50, 0, 0, 0, -2.1855694e-06, 50, 0, -50, -2.1855694e-06, 0, 150, 0)
+fov = 34.631897

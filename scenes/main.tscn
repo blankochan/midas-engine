@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://gjlgoy4dwfqu"]
+[gd_scene load_steps=6 format=3 uid="uid://gjlgoy4dwfqu"]
 
 [ext_resource type="Script" uid="uid://dykcyrn0ac66w" path="res://scripts/PlanetManager.cs" id="1_o5qli"]
-[ext_resource type="PackedScene" uid="uid://c0tw0qpwx03t1" path="res://scenes/sector.tscn" id="2_0wfyh"]
-[ext_resource type="PackedScene" uid="uid://3bn4uy83bmyj" path="res://scenes/tile.tscn" id="3_jyhfs"]
+[ext_resource type="PackedScene" uid="uid://c0tw0qpwx03t1" path="res://prefabs/World/sector.tscn" id="2_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://3bn4uy83bmyj" path="res://prefabs/World/tile.tscn" id="3_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://cls3v03d1hw7a" path="res://scenes/pointTest.tscn" id="3_sugp2"]
+[ext_resource type="PackedScene" uid="uid://bkgahbi35syob" path="res://prefabs/Player/player.tscn" id="6_tefeu"]
 
 [node name="Main" type="Node"]
 
@@ -20,11 +21,6 @@ planetPath = NodePath("../../Planet")
 sectorPrototype = ExtResource("2_0wfyh")
 tileProtoype = ExtResource("3_jyhfs")
 pointTest = ExtResource("3_sugp2")
-depth = 3
-
-[node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 3, 0)
-fov = 34.631897
 
 [node name="Planet" type="Node" parent="."]
 
@@ -34,3 +30,5 @@ fov = 34.631897
 transform = Transform3D(1, 0, 0, 0, -0.82522196, 0.5648086, 0, -0.5648086, -0.82522196, 0, 3.7416716, -6.281315)
 light_color = Color(0, 1, 1, 1)
 spot_range = 19.354795
+
+[node name="Player" parent="." instance=ExtResource("6_tefeu")]
